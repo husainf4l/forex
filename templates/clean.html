@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gold Analyzer</title>
+    <link href="/static/css/clean.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <span class="gold-icon">◉</span>
+                <h1>Gold</h1>
+            </div>
+            <div class="status">
+                <span id="market-status">Market Open</span>
+                <div class="live-indicator"></div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Price Card -->
+            <div class="price-card">
+                <div class="price-header">
+                    <h2>Current Price</h2>
+                    <span id="last-update">Loading...</span>
+                </div>
+                <div class="price-display">
+                    <span id="current-price">$0.00</span>
+                    <div class="price-change">
+                        <span id="price-change">+$0.00</span>
+                        <span id="price-change-percent">(+0.00%)</span>
+                    </div>
+                </div>
+                <div class="price-details">
+                    <div class="detail-item">
+                        <span class="label">Bid</span>
+                        <span id="bid-price">$0.00</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="label">Ask</span>
+                        <span id="ask-price">$0.00</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="label">High</span>
+                        <span id="high-price">$0.00</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="label">Low</span>
+                        <span id="low-price">$0.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chart Placeholder -->
+            <div class="chart-card">
+                <h3>Price Chart</h3>
+                <div class="chart-placeholder">
+                    <p>Chart will be implemented here</p>
+                </div>
+            </div>
+
+            <!-- Market Info -->
+            <div class="info-card">
+                <h3>Market Information</h3>
+                <div id="market-info">
+                    <p>Loading market information...</p>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <button id="refresh-btn" class="refresh-btn">
+                <span class="refresh-icon">↻</span>
+                Refresh
+            </button>
+        </footer>
+    </div>
+
+    <script src="/static/js/clean.js"></script>
+</body>
+</html>

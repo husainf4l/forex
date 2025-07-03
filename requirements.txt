@@ -1,0 +1,13 @@
+fastapi
+uvicorn[standard]
+langchain
+langgraph
+pydantic
+requests
+yfinance
+pandas
+numpy
+python-multipart
+jinja2
+aiofiles
+scipy
