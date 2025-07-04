@@ -1,87 +1,337 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gold Analyzer</title>
-    <link href="/static/css/clean.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-</head>
-<body>
-    <div class="container">
-        <!-- Header -->
-        <header class="header">
-            <div class="logo">
-                <span class="gold-icon">◉</span>
-                <h1>Gold</h1>
-            </div>
-            <div class="status">
-                <span id="market-status">Market Open</span>
-                <div class="live-indicator"></div>
-            </div>
-        </header>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gold Trader - Real-Time Gold Trading Platform</title>
+    <link href="/static/css/clean.css" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="trading-platform">
+      <!-- Top Navigation Bar -->
+      <nav class="top-nav">
+        <div class="nav-left">
+          <div class="logo">
+            <i class="fas fa-coins"></i>
+            <span>Gold Trader</span>
+          </div>
+          <div class="nav-menu">
+            <a href="#" class="nav-item active">Chart</a>
+            <a href="#" class="nav-item">Markets</a>
+            <a href="#" class="nav-item">News</a>
+            <a href="#" class="nav-item">Analysis</a>
+          </div>
+        </div>
+        <div class="nav-right">
+          <div class="connection-indicator">
+            <div class="status-dot" id="connection-dot"></div>
+            <span id="connection-status">Connected</span>
+          </div>
+          <div class="user-menu">
+            <i class="fas fa-user-circle"></i>
+          </div>
+        </div>
+      </nav>
 
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- Price Card -->
-            <div class="price-card">
-                <div class="price-header">
-                    <h2>Current Price</h2>
-                    <span id="last-update">Loading...</span>
-                </div>
-                <div class="price-display">
-                    <span id="current-price">$0.00</span>
-                    <div class="price-change">
-                        <span id="price-change">+$0.00</span>
-                        <span id="price-change-percent">(+0.00%)</span>
-                    </div>
-                </div>
-                <div class="price-details">
-                    <div class="detail-item">
-                        <span class="label">Bid</span>
-                        <span id="bid-price">$0.00</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="label">Ask</span>
-                        <span id="ask-price">$0.00</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="label">High</span>
-                        <span id="high-price">$0.00</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="label">Low</span>
-                        <span id="low-price">$0.00</span>
-                    </div>
-                </div>
+      <!-- Main Trading Interface -->
+      <div class="trading-container">
+        <!-- Left Sidebar - Market Overview -->
+        <aside class="left-sidebar">
+          <div class="sidebar-header">
+            <h3>Market Overview</h3>
+            <button class="collapse-btn">
+              <i class="fas fa-chevron-left"></i>
+            </button>
+          </div>
+
+          <!-- Current Price Card -->
+          <div class="price-summary">
+            <div class="asset-info">
+              <div class="asset-title">
+                <i class="fas fa-coins gold-icon"></i>
+                <span>XAU/USD</span>
+              </div>
+              <div class="asset-subtitle">Gold Spot</div>
             </div>
 
-            <!-- Chart Placeholder -->
-            <div class="chart-card">
-                <h3>Price Chart</h3>
-                <div class="chart-placeholder">
-                    <p>Chart will be implemented here</p>
-                </div>
+            <div class="price-display">
+              <div class="current-price" id="main-price">$3,339.50</div>
+              <div class="price-change" id="main-change">
+                <span class="change-amount">+$12.50</span>
+                <span class="change-percent">(+0.38%)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Market Details -->
+          <div class="market-details">
+            <div class="detail-row">
+              <span class="label">Bid</span>
+              <span class="value" id="bid-price">$3,339.40</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Ask</span>
+              <span class="value" id="ask-price">$3,339.70</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Spread</span>
+              <span class="value" id="spread">$0.30</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">High</span>
+              <span class="value high" id="high-price">$3,342.10</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Low</span>
+              <span class="value low" id="low-price">$3,335.80</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Volume</span>
+              <span class="value" id="volume">1.2M oz</span>
+            </div>
+          </div>
+
+          <!-- Market Status -->
+          <div class="market-status">
+            <div class="status-indicator">
+              <div class="status-dot active"></div>
+              <span id="market-status">Market Open</span>
+            </div>
+            <div class="last-update" id="last-update">Updated 09:02:11</div>
+          </div>
+        </aside>
+
+        <!-- Main Chart Area -->
+        <main class="chart-area">
+          <div class="chart-header">
+            <div class="chart-title">
+              <h2>XAU/USD - Gold Spot Price</h2>
+              <div class="chart-subtitle">
+                Real-time streaming data from Capital.com
+              </div>
             </div>
 
-            <!-- Market Info -->
-            <div class="info-card">
-                <h3>Market Information</h3>
-                <div id="market-info">
-                    <p>Loading market information...</p>
-                </div>
+            <div class="chart-controls">
+              <div class="timeframe-selector">
+                <button class="timeframe-btn" data-timeframe="1">1m</button>
+                <button class="timeframe-btn" data-timeframe="5">5m</button>
+                <button class="timeframe-btn active" data-timeframe="15">
+                  15m
+                </button>
+                <button class="timeframe-btn" data-timeframe="60">1h</button>
+                <button class="timeframe-btn" data-timeframe="240">4h</button>
+                <button class="timeframe-btn" data-timeframe="1D">1D</button>
+              </div>
+
+              <div class="chart-type-selector">
+                <button
+                  class="chart-type-btn active"
+                  data-type="candlestick"
+                  title="Candlestick"
+                >
+                  <i class="fas fa-chart-bar"></i>
+                </button>
+                <button
+                  class="chart-type-btn"
+                  data-type="line"
+                  title="Line Chart"
+                >
+                  <i class="fas fa-chart-line"></i>
+                </button>
+                <button
+                  class="chart-type-btn"
+                  data-type="area"
+                  title="Area Chart"
+                >
+                  <i class="fas fa-chart-area"></i>
+                </button>
+              </div>
+
+              <div class="chart-tools">
+                <button class="tool-btn" id="reset-zoom" title="Reset Zoom">
+                  <i class="fas fa-search-minus"></i>
+                </button>
+                <button
+                  class="tool-btn"
+                  id="toggle-crosshair"
+                  title="Crosshair"
+                >
+                  <i class="fas fa-crosshairs"></i>
+                </button>
+                <button
+                  class="tool-btn"
+                  id="toggle-volume"
+                  title="Toggle Volume"
+                >
+                  <i class="fas fa-signal"></i>
+                </button>
+                <button class="tool-btn" title="Fullscreen">
+                  <i class="fas fa-expand"></i>
+                </button>
+                <button class="tool-btn" title="Settings">
+                  <i class="fas fa-cog"></i>
+                </button>
+              </div>
             </div>
+          </div>
+
+          <div class="chart-container">
+            <div id="tradingview-chart"></div>
+            <div class="chart-loading" id="chart-loading">
+              <i class="fas fa-spinner fa-spin"></i>
+              <span>Loading chart data...</span>
+            </div>
+          </div>
+
+          <!-- Chart Footer -->
+          <div class="chart-footer">
+            <div class="chart-info">
+              <span class="info-item">
+                <i class="fas fa-circle" style="color: #ffd700"></i>
+                Real-time Candlesticks
+              </span>
+              <span class="info-item">
+                <i class="fas fa-wifi"></i>
+                <span id="ws-status">WebSocket Connected</span>
+              </span>
+              <span class="info-item">
+                <i class="fas fa-clock"></i>
+                <span id="server-time">09:02:11 UTC</span>
+              </span>
+              <span class="info-item">
+                <i class="fas fa-chart-bar"></i>
+                Volume: <span id="current-volume">1.2K</span>
+              </span>
+            </div>
+          </div>
         </main>
 
-        <!-- Footer -->
-        <footer class="footer">
-            <button id="refresh-btn" class="refresh-btn">
-                <span class="refresh-icon">↻</span>
-                Refresh
+        <!-- Right Sidebar - Trading Panel -->
+        <aside class="right-sidebar">
+          <div class="sidebar-header">
+            <h3>Quick Trade</h3>
+            <button class="collapse-btn">
+              <i class="fas fa-chevron-right"></i>
             </button>
-        </footer>
+          </div>
+
+          <!-- Trading Panel -->
+          <div class="trading-panel">
+            <div class="trade-tabs">
+              <button class="trade-tab active">Buy</button>
+              <button class="trade-tab">Sell</button>
+            </div>
+
+            <div class="trade-form">
+              <div class="input-group">
+                <label>Amount (oz)</label>
+                <input
+                  type="number"
+                  class="trade-input"
+                  value="1.0"
+                  step="0.1"
+                />
+              </div>
+
+              <div class="input-group">
+                <label>Price</label>
+                <input
+                  type="number"
+                  class="trade-input"
+                  id="trade-price"
+                  value="3339.70"
+                  readonly
+                />
+              </div>
+
+              <div class="trade-summary">
+                <div class="summary-row">
+                  <span>Total Value</span>
+                  <span id="total-value">$3,339.70</span>
+                </div>
+                <div class="summary-row">
+                  <span>Estimated Fee</span>
+                  <span>$1.67</span>
+                </div>
+              </div>
+
+              <button class="trade-button buy-button">
+                <i class="fas fa-arrow-up"></i>
+                Buy XAU/USD
+              </button>
+            </div>
+          </div>
+
+          <!-- Recent Activity -->
+          <div class="recent-activity">
+            <h4>Recent Activity</h4>
+            <div class="activity-list">
+              <div class="activity-item">
+                <div class="activity-icon buy">
+                  <i class="fas fa-arrow-up"></i>
+                </div>
+                <div class="activity-details">
+                  <div class="activity-title">Buy 2.5 oz</div>
+                  <div class="activity-subtitle">$3,335.20</div>
+                </div>
+                <div class="activity-time">2m ago</div>
+              </div>
+
+              <div class="activity-item">
+                <div class="activity-icon sell">
+                  <i class="fas fa-arrow-down"></i>
+                </div>
+                <div class="activity-details">
+                  <div class="activity-title">Sell 1.0 oz</div>
+                  <div class="activity-subtitle">$3,342.80</div>
+                </div>
+                <div class="activity-time">15m ago</div>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+
+      <!-- Bottom Status Bar -->
+      <footer class="status-bar">
+        <div class="status-left">
+          <span class="status-item">
+            <i class="fas fa-server"></i>
+            Server: Online
+          </span>
+          <span class="status-item">
+            <i class="fas fa-signal"></i>
+            Latency: 23ms
+          </span>
+        </div>
+        <div class="status-center">
+          <span class="status-item">
+            <i class="fas fa-exchange-alt"></i>
+            Last Trade: $3,339.55 at 09:02:10
+          </span>
+        </div>
+        <div class="status-right">
+          <span class="status-item">
+            <i class="fas fa-chart-line"></i>
+            24h Change: +0.38%
+          </span>
+          <span class="status-item">
+            <i class="fas fa-clock"></i>
+            <span id="live-time"></span>
+          </span>
+        </div>
+      </footer>
     </div>
 
     <script src="/static/js/clean.js"></script>
-</body>
+  </body>
 </html>

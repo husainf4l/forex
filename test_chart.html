@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TradingView Chart Test</title>
+    <script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #1a1a1a;
+            color: white;
+            padding: 20px;
+        }
+        #chart {
+            width: 100%;
+            height: 400px;
+            background: #131722;
+            border: 1px solid #333;
+        }
+        .info {
+            margin-bottom: 20px;
+            padding: 10px;
+            background: #2a2a2a;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="info">
+        <h2>TradingView Lightweight Charts Test</h2>
+        <p>This is a simple test to verify the TradingView library is working.</p>
+        <p id="status">Loading...</p>
+    </div>
+    
+    <div id="chart"></div>
+    
+    <script>
+        console.log('🧪 Starting TradingView test...');
+        
+        // Check if library is loaded
+        if (typeof LightweightCharts === 'undefined') {
+            document.getElementById('status').textContent = '❌ TradingView library not loaded!';
+            console.error('❌ TradingView library not loaded!');
+        } else {
+            document.getElementById('status').textContent = '✅ TradingView library loaded successfully!';
+            console.log('✅ TradingView library loaded successfully!');
+            
+            // Create chart
+            const chart = LightweightCharts.createChart(document.getElementById('chart'), {
+                width: 800,
+                height: 400,
+                layout: {
+                    background: {
+                        type: 'solid',
+                        color: '#131722'
+                    },
+                    textColor: '#d1d4dc',
+                },
+                grid: {
+                    vertLines: {
+                        color: '#2a2e39',
+                    },
+                    horzLines: {
+                        color: '#2a2e39',
+                    },
+                },
+                crosshair: {
+                    mode: LightweightCharts.CrosshairMode.Normal,
+                },
+                rightPriceScale: {
+                    borderColor: '#2a2e39',
+                },
+                timeScale: {
+                    borderColor: '#2a2e39',
+                },
+            });
+            
+            // Add candlestick series
+            const candlestickSeries = chart.addCandlestickSeries({
+                upColor: '#00d4aa',
+                downColor: '#ff6b6b',
+                borderDownColor: '#ff6b6b',
+                borderUpColor: '#00d4aa',
+                wickDownColor: '#ff6b6b',
+                wickUpColor: '#00d4aa',
+            });
+            
+            // Add test data
+            const testData = [
+                { time: '2023-12-01', open: 2045, high: 2048, low: 2042, close: 2047 },
+                { time: '2023-12-02', open: 2047, high: 2050, low: 2045, close: 2049 },
+                { time: '2023-12-03', open: 2049, high: 2052, low: 2046, close: 2051 },
+                { time: '2023-12-04', open: 2051, high: 2054, low: 2048, close: 2053 },
+                { time: '2023-12-05', open: 2053, high: 2056, low: 2050, close: 2055 },
+            ];
+            
+            candlestickSeries.setData(testData);
+            chart.timeScale().fitContent();
+            
+            console.log('✅ Test chart created successfully!');
+            document.getElementById('status').textContent = '✅ Chart created successfully with test data!';
+        }
+    </script>
+</body>
+</html>

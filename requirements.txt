@@ -11,3 +11,7 @@ python-multipart
 jinja2
 aiofiles
 scipy
+websockets
+websocket-client
+lightstreamer-client-lib
+aiohttp
