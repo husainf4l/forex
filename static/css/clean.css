@@ -1200,92 +1200,148 @@ body {
     color: white;
 }
 
-/* Responsive Design */
+/* Data Fetching Controls */
+.data-controls {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    margin-top: 16px;
+    overflow: hidden;
+}
+
+.data-controls-header {
+    background: var(--tertiary-bg);
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.data-controls-header h4 {
+    color: var(--text-primary);
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.data-controls-header i {
+    color: var(--gold);
+    font-size: 16px;
+}
+
+.data-buttons {
+    padding: 16px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.data-btn {
+    background: var(--secondary-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    color: var(--text-secondary);
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    text-align: left;
+    min-height: 44px;
+}
+
+.data-btn:hover {
+    background: var(--hover-bg);
+    border-color: var(--gold);
+    color: var(--text-primary);
+    transform: translateY(-1px);
+}
+
+.data-btn:active {
+    transform: translateY(0);
+}
+
+.data-btn.warning {
+    border-color: var(--red);
+    background: rgba(239, 83, 80, 0.1);
+}
+
+.data-btn.warning:hover {
+    border-color: var(--red);
+    background: rgba(239, 83, 80, 0.15);
+    color: var(--red);
+}
+
+.data-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.data-btn i {
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+.data-status {
+    padding: 12px 16px;
+    border-top: 1px solid var(--border-color);
+    background: var(--secondary-bg);
+}
+
+.status-text {
+    color: var(--text-secondary);
+    font-size: 12px;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 4px;
+    background: var(--tertiary-bg);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold), var(--gold-light));
+    border-radius: 2px;
+    width: 0%;
+    transition: width 0.3s ease;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+/* Data Status States */
+.data-status.loading .status-text {
+    color: var(--blue);
+}
+
+.data-status.success .status-text {
+    color: var(--green);
+}
+
+.data-status.error .status-text {
+    color: var(--red);
+}
+
+/* Responsive adjustments */
 @media (max-width: 768px) {
-    .container {
-        padding: 16px;
-    }
-    
-    .header {
-        margin-bottom: 24px;
-    }
-    
-    .logo h1 {
-        font-size: 28px;
-    }
-    
-    .gold-icon {
-        font-size: 28px;
-    }
-    
-    #current-price {
-        font-size: 36px;
-    }
-    
-    .price-details {
+    .data-buttons {
         grid-template-columns: 1fr;
     }
     
-    .price-card {
-        padding: 24px;
+    .data-btn {
+        justify-content: center;
+        text-align: center;
     }
-    
-    .chart-container {
-        height: 250px;
-    }
-    
-    .chart-header {
-        flex-direction: column;
-        gap: 12px;
-        align-items: flex-start;
-    }
-    
-    .chart-controls {
-        align-self: flex-end;
-    }
-}
-
-/* Loading States */
-.loading {
-    opacity: 0.6;
-    pointer-events: none;
-}
-
-.loading::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 20px;
-    height: 20px;
-    margin: -10px 0 0 -10px;
-    border: 2px solid var(--border-color);
-    border-top: 2px solid var(--gold-primary);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-/* Error States */
-.error {
-    color: var(--red);
-    background: rgba(255, 59, 48, 0.1);
-    border: 1px solid rgba(255, 59, 48, 0.2);
-    border-radius: 8px;
-    padding: 12px 16px;
-    font-size: 14px;
-}
-
-/* Success States */
-.success {
-    color: var(--green);
-    background: rgba(48, 209, 88, 0.1);
-    border: 1px solid rgba(48, 209, 88, 0.2);
-    border-radius: 8px;
-    padding: 12px 16px;
-    font-size: 14px;
 }

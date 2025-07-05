@@ -1277,6 +1277,251 @@ class GoldTradingPlatform {
     // ...existing code...
 }
 
+// Data Fetching Manager
+class DataFetchingManager {
+    constructor() {
+        this.isLoading = false;
+        this.setupEventListeners();
+    }
+
+    setupEventListeners() {
+        // Recent data button
+        document.getElementById('fetch-recent')?.addEventListener('click', () => {
+            this.fetchRecentData();
+        });
+
+        // Daily data button
+        document.getElementById('fetch-daily')?.addEventListener('click', () => {
+            this.fetchDailyData();
+        });
+
+        // Historical data button
+        document.getElementById('fetch-historical')?.addEventListener('click', () => {
+            this.fetchHistoricalData();
+        });
+
+        // All data button (with confirmation)
+        document.getElementById('fetch-all')?.addEventListener('click', () => {
+            this.fetchAllData();
+        });
+    }
+
+    async fetchRecentData(hours = 24) {
+        if (this.isLoading) return;
+
+        try {
+            this.setLoadingState(true, `Fetching recent ${hours} hours of data...`);
+
+            const response = await fetch(`/api/fetch-recent-data?hours=${hours}`);
+            const result = await response.json();
+
+            if (result.success) {
+                this.showSuccess(`✅ Fetched ${result.data_count} recent records`);
+                console.log('Recent data:', result);
+                
+                // Update chart if needed
+                if (result.sample_data && result.sample_data.length > 0) {
+                    this.processAndDisplayData(result.sample_data);
+                }
+            } else {
+                this.showError(`❌ Failed to fetch recent data: ${result.error}`);
+            }
+        } catch (error) {
+            this.showError(`❌ Network error: ${error.message}`);
+        } finally {
+            this.setLoadingState(false);
+        }
+    }
+
+    async fetchDailyData(days = 30) {
+        if (this.isLoading) return;
+
+        try {
+            this.setLoadingState(true, `Fetching ${days} days of daily data...`);
+
+            const response = await fetch(`/api/fetch-daily-data?days=${days}`);
+            const result = await response.json();
+
+            if (result.success) {
+                this.showSuccess(`✅ Fetched ${result.data_count} daily records`);
+                console.log('Daily data:', result);
+                
+                // Process daily data for chart
+                if (result.data && result.data.length > 0) {
+                    this.processAndDisplayData(result.data);
+                }
+            } else {
+                this.showError(`❌ Failed to fetch daily data: ${result.error}`);
+            }
+        } catch (error) {
+            this.showError(`❌ Network error: ${error.message}`);
+        } finally {
+            this.setLoadingState(false);
+        }
+    }
+
+    async fetchHistoricalData(days = 30, resolution = 'MINUTE_5') {
+        if (this.isLoading) return;
+
+        try {
+            this.setLoadingState(true, `Fetching ${days} days of ${resolution} data...`);
+
+            const response = await fetch(`/api/fetch-historical-data?days=${days}&resolution=${resolution}&max_pages=20`);
+            const result = await response.json();
+
+            if (result.success) {
+                this.showSuccess(`✅ Fetched ${result.data_count} historical records`);
+                console.log('Historical data:', result);
+                
+                // Process historical data for chart
+                if (result.sample_data && result.sample_data.length > 0) {
+                    this.processAndDisplayData(result.sample_data);
+                }
+            } else {
+                this.showError(`❌ Failed to fetch historical data: ${result.error}`);
+            }
+        } catch (error) {
+            this.showError(`❌ Network error: ${error.message}`);
+        } finally {
+            this.setLoadingState(false);
+        }
+    }
+
+    async fetchAllData() {
+        // Show confirmation dialog for all data
+        const confirmed = confirm(
+            '⚠️ This will fetch ALL available historical data which may:\n' +
+            '• Take several minutes\n' +
+            '• Use significant API quota\n' +
+            '• Return large amounts of data\n\n' +
+            'Are you sure you want to continue?'
+        );
+
+        if (!confirmed) return;
+
+        if (this.isLoading) return;
+
+        try {
+            this.setLoadingState(true, 'Fetching ALL available data... This may take several minutes.');
+
+            const response = await fetch('/api/fetch-all-data', {
+                method: 'POST'
+            });
+            const result = await response.json();
+
+            if (result.success) {
+                this.showSuccess(`✅ Fetched ${result.data_count} total records! Warning: Large dataset received.`);
+                console.log('All data:', result);
+                
+                // Process sample of all data for chart
+                if (result.sample_data && result.sample_data.length > 0) {
+                    this.processAndDisplayData(result.sample_data);
+                }
+            } else {
+                this.showError(`❌ Failed to fetch all data: ${result.error}`);
+            }
+        } catch (error) {
+            this.showError(`❌ Network error: ${error.message}`);
+        } finally {
+            this.setLoadingState(false);
+        }
+    }
+
+    processAndDisplayData(data) {
+        // Convert API data to chart format
+        try {
+            const chartData = data.map(item => {
+                const timestamp = new Date(item.timestamp).getTime() / 1000;
+                
+                return {
+                    time: timestamp,
+                    open: item.open_mid || item.close_mid || 2000,
+                    high: item.high_mid || item.close_mid || 2000,
+                    low: item.low_mid || item.close_mid || 2000,
+                    close: item.close_mid || 2000,
+                    value: item.close_mid || 2000, // For line charts
+                    volume: item.volume || Math.random() * 1000 + 500
+                };
+            }).sort((a, b) => a.time - b.time);
+
+            console.log('📊 Processed chart data:', chartData.slice(0, 5));
+
+            // Update the main chart if available
+            if (window.goldTradingPlatform && window.goldTradingPlatform.chart) {
+                // Clear existing data
+                window.goldTradingPlatform.candleData = chartData;
+                window.goldTradingPlatform.priceData = chartData;
+                
+                // Update chart series
+                if (window.goldTradingPlatform.candlestickSeries) {
+                    window.goldTradingPlatform.candlestickSeries.setData(chartData);
+                }
+                if (window.goldTradingPlatform.lineSeries) {
+                    window.goldTradingPlatform.lineSeries.setData(chartData);
+                }
+                if (window.goldTradingPlatform.areaSeries) {
+                    window.goldTradingPlatform.areaSeries.setData(chartData);
+                }
+
+                console.log('✅ Chart updated with fetched data');
+            }
+        } catch (error) {
+            console.error('❌ Error processing data for chart:', error);
+            this.showError('❌ Error processing data for display');
+        }
+    }
+
+    setLoadingState(isLoading, message = '') {
+        this.isLoading = isLoading;
+        const statusElement = document.getElementById('data-status');
+        const statusText = statusElement?.querySelector('.status-text');
+        const progressBar = document.getElementById('progress-bar');
+        const buttons = document.querySelectorAll('.data-btn');
+
+        if (isLoading) {
+            statusElement?.classList.add('loading');
+            statusElement?.classList.remove('success', 'error');
+            if (statusText) statusText.textContent = message;
+            progressBar?.style.setProperty('display', 'block');
+            buttons.forEach(btn => btn.disabled = true);
+        } else {
+            statusElement?.classList.remove('loading');
+            progressBar?.style.setProperty('display', 'none');
+            buttons.forEach(btn => btn.disabled = false);
+        }
+    }
+
+    showSuccess(message) {
+        const statusElement = document.getElementById('data-status');
+        const statusText = statusElement?.querySelector('.status-text');
+        
+        statusElement?.classList.add('success');
+        statusElement?.classList.remove('loading', 'error');
+        if (statusText) statusText.textContent = message;
+        
+        // Clear success message after 5 seconds
+        setTimeout(() => {
+            statusElement?.classList.remove('success');
+            if (statusText) statusText.textContent = 'Ready to fetch data';
+        }, 5000);
+    }
+
+    showError(message) {
+        const statusElement = document.getElementById('data-status');
+        const statusText = statusElement?.querySelector('.status-text');
+        
+        statusElement?.classList.add('error');
+        statusElement?.classList.remove('loading', 'success');
+        if (statusText) statusText.textContent = message;
+        
+        // Clear error message after 10 seconds
+        setTimeout(() => {
+            statusElement?.classList.remove('error');
+            if (statusText) statusText.textContent = 'Ready to fetch data';
+        }, 10000);
+    }
+}
+
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     console.log('🎯 DOM loaded, initializing TradingView-style Gold Trading Platform...');
@@ -1290,6 +1535,9 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('✅ TradingView Lightweight Charts library loaded successfully');
     
     window.goldTradingPlatform = new GoldTradingPlatform();
+    window.dataFetchingManager = new DataFetchingManager();
+    
+    console.log('🚀 Gold Trading Platform initialized with data fetching capabilities');
     
     // Start ping interval
     window.goldTradingPlatform.startPingInterval();
